@@ -5,17 +5,29 @@ const PORT = 4000;  // 포트번호 4000사용 백엔드 관습
 
 const app = express();
 const logger = morgan("dev");
-
-const home = (req, res) => {
-  return res.end("hello");  
-};
-const login = (req, res) => {
-  return res.send("login");
-}
-
 app.use(logger);
-app.get("/", home);
-app.get("/login", login);
+
+const globalRouter = express.Router();
+
+const handleHome = (req, res) => res.send("Home");
+
+globalRouter.get("/", handleHome);
+
+const userRouter = express.Router();
+
+const handleEditUser = (req, res) => res.send("EDIT USER");
+
+userRouter.get("/edit", handleEditUser);
+
+const videoRouter = express.Router();
+
+const handleWatchVideo = (req, res) => res.send("Watch Video");
+
+videoRouter.get("/watch", handleWatchVideo);
+
+app.use("/", globalRouter);
+app.use("/videos", videoRouter);
+app.use("/users", userRouter);
 
 
 const handleListening = () => 
