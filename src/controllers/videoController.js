@@ -1,5 +1,5 @@
 export const trending = (req, res) => {
-    res.send("Home Page Videos");
+    res.render("home"); // home.pug 랜더
 }
 export const see = (req, res) => {
     return res.send(`Watch video #${req.params.id}`);
