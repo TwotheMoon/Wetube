@@ -1,9 +1,0 @@
-extends base
-include mixins/video
-
-block content 
-    h2 Welcom here you will see the tredning videos 
-    each item in videos
-        +video(item)
-    else
-        li Sorry nothing found.
