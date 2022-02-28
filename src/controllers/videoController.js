@@ -1,12 +1,6 @@
-export const trending = (req, res) => {
-    res.render("home"); // home.pug 랜더
-}
-export const see = (req, res) => {
-    return res.send(`Watch video #${req.params.id}`);
-}
-export const edit = (req, res) => {
-    return res.send("Edit");
-}
+export const trending = (req, res) => { res.render("home", { pageTitle: "Home" }); } // home.pug 랜더}
+export const see = (req, res) => { return res.render("watch", { pageTitle: "Watch" }); }
+export const edit = (req, res) => { return res.render("edit", { pageTitle: "Edit" }); }
 export const search = (req, res) => {
     res.send("Search");
 }
