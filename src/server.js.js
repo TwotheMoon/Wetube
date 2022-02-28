@@ -5,16 +5,21 @@ const PORT = 4000;
 const app = express();
 
 // 서버 내부 로직
-const logger = (req, res, next) => {
-    console.log(`${req.method} ${req.url}`);
+const methodLogger = (req, res, next) => {
+    console.log(`Method ${req.method}`);
     next();
 };
-
-const handleHome = (req, res) => {
+const routerLogger = (req, res, next) => {
+    console.log(`Path ${req.url}`);
+    next();
+}
+const home = (req, res) => {
     return res.send("Home");
 };
 
-app.get("/", logger, handleHome);
+app.use(methodLogger);
+app.use(routerLogger);
+app.get("/", home);
 
 // 서버 실행하기 (리스닝 실행 )
 const handleListening = () => console.log(`Server Listen on port http://localhost:${PORT}`);
