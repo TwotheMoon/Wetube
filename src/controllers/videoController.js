@@ -4,7 +4,7 @@ let videos = [
         rating: 5,
         comments: 2,
         createdAt: "2 minutes age",
-        views: 59,
+        views: 1,
         id: 1
     },
     {
@@ -27,10 +27,10 @@ let videos = [
 export const trending = (req, res) => {
     return res.render("home", { pageTitle: "Home", videos }); // home.pug 랜더} 
 }
-export const see = (req, res) => {
+export const watch = (req, res) => {
     const { id } = req.params;
     const video = videos[id - 1];
-    return res.render("watch", { pageTitle: `Watching ${video.title}` });
+    return res.render("watch", { pageTitle: `Watching ${video.title}`, video });
 }
 export const edit = (req, res) => { return res.render("edit", { pageTitle: "Edit" }); }
 export const search = (req, res) => {
