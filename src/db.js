@@ -1,9 +1,10 @@
 import mongoose from "mongoose";
 
 mongoose.connect("mongodb://127.0.0.1:27017/wetube", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-});  // wetube DB연결
+    //useNewUrlParser: true,
+    //useUnifiedTopology: true,
+    //useFindAndModify: false
+});  // wetube DB연결 및 설정 6버전 에서는 기본값
 
 const db = mongoose.connection;
 
