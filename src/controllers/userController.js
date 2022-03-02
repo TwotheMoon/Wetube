@@ -1,6 +1,22 @@
-export const join = (req, res) => {
-    res.send("join User");
+import User from "../models/User";
+
+// 회원가입 진입 get
+export const getJoin = (req, res) => {
+    return res.render("join", { pageTitle: "Join" });
 }
+// 회원갇입 post create
+export const postJoin = async (req, res) => {
+    const { name, username, email, password, location } = req.body;
+    await User.create({
+        name,
+        username,
+        email,
+        password,
+        location,
+    });
+    return res.redirect("/login");
+}
+
 export const edit = (req, res) => {
     res.send("edit User");
 }
@@ -8,7 +24,7 @@ export const remove = (req, res) => {
     res.send("remove User");
 }
 export const login = (req, res) => {
-    res.send("login User");
+    res.render("login", { pageTitle: "Login" });
 }
 export const logout = (req, res) => {
     res.send("log out User");

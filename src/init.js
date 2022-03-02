@@ -1,5 +1,6 @@
 import "./db";
 import "./models/Video";
+import "./models/User";
 import app from "./server.js";
 
 // 서버 구축 선언
