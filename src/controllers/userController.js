@@ -59,7 +59,8 @@ export const postLogin = async (req, res) => {
             errorMessage: "Wrong password"
         });
     }
-    console.log("LOG USER IN! COMING SOON!");
+    req.session.loggedIn = true;
+    req.session.user = user;             // 세션 정보 저장
     return res.redirect("/");
 }
 export const logout = (req, res) => {
