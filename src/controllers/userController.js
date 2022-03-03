@@ -62,23 +62,38 @@ export const postLogin = async (req, res) => {
     req.session.loggedIn = true;
     req.session.user = user;             // 세션 정보 저장
     return res.redirect("/");
-}
+};
 // github login 깃허브로 보내기
 export const startGithubLogin = (req, res) => {
     const baseUrl = "https://github.com/login/oauth/authorize";
     const config = {
-        client_id: "a187b6b106e2eb6c54e0",
+        client_id: process.env.GH_CLIENT,
         allow_signup: false,
         scope: "read:user user:email",
     };
     const params = new URLSearchParams(config).toString();
     const finalUrl = `${baseUrl}?${params}`;
     return res.redirect(finalUrl);
-}
+};
 // 깃허브에서 콜백
-export const finishGithubLogin = (req, res) => {
-
-}
+export const finishGithubLogin = async (req, res) => {
+    const baseUrl = "https://github.com/login/oauth/access_token";
+    const config = {
+        client_id: process.env.GH_CLIENT,
+        client_secret: process.env.GH_SECRET,
+        code: req.query.code,
+    };
+    const params = new URLSearchParams(config).toString();
+    const finalUrl = `${baseUrl}?${params}`;
+    const data = await fetch(finalUrl, {
+        method: "POST",
+        headers: {
+            Accept: "application/json",
+        },
+    });
+    const json = await data.json();
+    console.log(json);
+};
 export const logout = (req, res) => {
     res.send("log out User");
 };
