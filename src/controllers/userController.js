@@ -46,7 +46,7 @@ export const getLogin = (req, res) => {
 export const postLogin = async (req, res) => {
     const { username, password } = req.body;
     const pageTitle = "Login";
-    const user = await User.findOne({ username });
+    const user = await User.findOne({ username, socialOnly: false });
     if (!user) {
         return res.status(400).render("login", {
             pageTitle,
@@ -74,7 +74,7 @@ export const startGithubLogin = (req, res) => {
     };
     const params = new URLSearchParams(config).toString();
     const finalUrl = `${baseUrl}?${params}`;
-    return res.redirect(finalUrl);
+    return res.redirect(finalUrl); // 깃허브에서 콜백으로 요청한 주소
 };
 // 깃허브에서 콜백
 export const finishGithubLogin = async (req, res) => {
@@ -110,16 +110,13 @@ export const finishGithubLogin = async (req, res) => {
         // 인증된 이메일 객체 추출
         const emailObj = emailData.find((email) => email.primary === true && email.verified === true);
         if (!emailObj) {
+            // 혹은 계정 생성 페이지 리다이렉트
             return res.redirect("/login");
         }
-        // DB에 같은 이메일을 가진 user가 이미 있다면 로그인 
-        const existingUser = await User.findOne({ email: emailObj.email });
-        if (existingUser) {
-            req.session.loggedIn = true;
-            req.session.user = existingUser;
-            return res.redirect("/");
-        } else {
-            const user = await User.create({
+        let user = await User.findOne({ email: emailObj.email });
+        if (!user) {      // 깃헙 이메일이 DB에 없다면 깃헙 정보로 회원가입
+            user = await User.create({
+                avatarUrl: userData.avatar_url,
                 name: userData.name,
                 username: userData.login,
                 email: emailObj.email,
@@ -127,23 +124,31 @@ export const finishGithubLogin = async (req, res) => {
                 socialOnly: true,
                 location: userData.location,
             });
+            // DB에 같은 이메일을 가진 user가 이미 있다면 로그인 
             req.session.loggedIn = true;
             req.session.user = user;
             return res.redirect("/");
         }
+        req.session.loggedIn = true;
+        req.session.user = user;
+        return res.redirect("/");
     } else {
         return res.redirect("/login");
     }
 };
+// 로그아웃
 export const logout = (req, res) => {
-    res.send("log out User");
+    req.session.destroy();
+    return res.redirect("/");
 };
-export const edit = (req, res) => {
-    res.send("edit User");
-};
-export const remove = (req, res) => {
-    res.send("remove User");
-};
+// 프로필 수정
+export const getEdit = (req, res) => {
+    return res.render("edit-profile", { pageTitle: "Edit Profile" });
+}
+export const postEdit = (req, res) => {
+
+    return res.render("edit-profile");
+}
 export const see = (req, res) => {
     res.send("See User");
 };
